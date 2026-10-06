@@ -1,260 +1,113 @@
 "use client";
 
 import Link from "next/link";
-import { mockRubricScores, mockSlides, mockFillerWords } from "@/data/mock";
 import { siteConfig } from "@/data/content";
-import ScoreRing from "@/components/ui/ScoreRing";
-import RadarChart from "@/components/ui/RadarChart";
-import Counter from "@/components/ui/Counter";
-import Badge from "@/components/ui/Badge";
-import MagneticButton from "@/components/ui/MagneticButton";
-import {
-  Award,
-  CheckCircle2,
-  AlertTriangle,
-  RotateCcw,
-  Download,
-  Share2,
-  TrendingUp,
-  Clock,
-  Sparkles,
-  ArrowRight,
-  Flame,
-} from "lucide-react";
+import { samplePitch } from "@/data/sample";
+import Scoresheet from "@/components/ui/Scoresheet";
 
 export default function ResultsPage() {
-  const axes = mockRubricScores.axes;
+  const slidePacing = [
+    { slide: "Slide 1: Title & Hook", time: "18s", target: "20s", share: 18 / 60 },
+    { slide: "Slide 2: Problem in Villages", time: "28s", target: "30s", share: 28 / 60 },
+    { slide: "Slide 3: USSD & SMS Gateway", time: "34s", target: "30s", share: 34 / 60 },
+    { slide: "Slide 4: Technical Architecture", time: "52s", target: "30s", share: 52 / 60, alert: "Ate 52s (+22s over)" },
+    { slide: "Slide 5: Live Demonstration", time: "22s", target: "40s", share: 22 / 60 },
+    { slide: "Slide 6: Team & Open Source", time: "13s", target: "30s", share: 13 / 60 },
+  ];
 
   return (
-    <div className="min-h-screen bg-[#07070B] text-[#F5F5FA] py-10 px-4 sm:px-8">
-      <div className="max-w-6xl mx-auto space-y-10">
+    <div className="bg-paper text-ink min-h-screen pt-20 pb-16 px-5 sm:px-8">
+      <div className="max-w-[1100px] mx-auto space-y-10">
         {/* Top Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+        <header className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 pb-4 border-b border-rule">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <Link href="/" className="text-xs font-mono-accent text-[#9A9AB0] hover:text-white">
+            <div className="flex items-center gap-2 text-xs font-mono text-ink-3 mb-1">
+              <Link href="/" className="hover:text-ink">
                 {siteConfig.name}
               </Link>
-              <span className="text-xs text-[#9A9AB0]">/</span>
-              <span className="text-xs font-mono-accent text-[#7C5CFF]">Rehearsal Evaluation</span>
+              <span>/</span>
+              <span className="text-ink font-semibold">Scoresheet Report</span>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-extrabold text-white font-heading">
-              Pitch Performance Breakdown
+            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-ink">
+              {samplePitch.name} • {samplePitch.runLabel}
             </h1>
-            <p className="text-xs sm:text-sm text-[#9A9AB0] mt-1 font-mono-accent">
-              Session: ETHGlobal Istanbul Rehearsal Run 05 • Recorded Today
-            </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Link href="/practice">
-              <MagneticButton variant="primary" size="md" className="text-xs font-bold">
-                <RotateCcw className="w-3.5 h-3.5 mr-1" />
-                <span>Practice Again</span>
-              </MagneticButton>
+          <div className="flex items-center gap-4">
+            <Link href="/practice" className="btn-signal text-xs py-2 px-3.5 font-semibold">
+              <span>Run Next Practice Round</span>
+              <span className="arrow-nudge text-xs">→</span>
             </Link>
 
-            <Link href="/dashboard">
-              <button className="px-4 py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono-accent text-white transition-colors">
-                View Progression →
-              </button>
+            <Link href="/dashboard" className="link-underline text-xs font-mono uppercase tracking-wider text-ink">
+              View Run History
             </Link>
           </div>
+        </header>
+
+        {/* Section 1: Full Scoresheet Table */}
+        <div className="space-y-4">
+          <div className="flex items-baseline justify-between">
+            <span className="text-xs uppercase font-mono tracking-widest text-ink-3 font-semibold">
+              OFFICIAL RUBRIC EVALUATION
+            </span>
+            <span className="font-mono text-xs text-ink-3">
+              Recorded at {samplePitch.recordedTime} / Limit {samplePitch.timeLimit}
+            </span>
+          </div>
+
+          <Scoresheet variant="full" />
         </div>
 
-        {/* Overall Score Banner */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center p-8 rounded-3xl bg-[#0E0E16]/90 border border-white/15 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-1/4 w-[400px] h-[300px] bg-gradient-to-r from-[#7C5CFF]/20 via-[#FF4D9D]/20 to-transparent blur-3xl pointer-events-none" />
-
-          {/* Left Score Ring (4 cols) */}
-          <div className="lg:col-span-4 flex flex-col items-center justify-center text-center">
-            <ScoreRing score={mockRubricScores.overall} size={170} strokeWidth={12} />
-            <div className="mt-3">
-              <span className="text-xs font-mono-accent text-[#3DDC97] bg-[#3DDC97]/15 px-3 py-1 rounded-full border border-[#3DDC97]/30">
-                Top 4% Winning Caliber
+        {/* Section 2: Per-slide time as horizontal bars on hairline tracks */}
+        <div className="space-y-6 pt-4 border-t border-rule">
+          <div className="flex items-baseline justify-between">
+            <div>
+              <span className="text-xs uppercase font-mono tracking-widest text-ink-3 font-semibold block mb-1">
+                SLIDE CADENCE AUDIT
               </span>
-            </div>
-          </div>
-
-          {/* Center Summary (8 cols) */}
-          <div className="lg:col-span-8 flex flex-col justify-between space-y-4">
-            <div>
-              <div className="flex items-center gap-2 text-xs font-mono-accent text-[#7C5CFF] uppercase font-bold tracking-wider mb-2">
-                <Flame className="w-4 h-4 text-[#FF4D9D]" />
-                <span>Sunday Stage Readiness Verified</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-white font-heading">
-                Outstanding technical clarity with tight time discipline.
+              <h2 className="font-serif text-2xl font-bold text-ink">
+                Per-slide delivery time vs. target share
               </h2>
-              <p className="text-xs sm:text-sm text-[#9A9AB0] mt-2 leading-relaxed">
-                You stayed under the 4-minute ceiling (03:48 total), answered the Principal Architect's edge-case interrogation without stumbling, and articulated the WebAudio architecture crisply.
-              </p>
             </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-white/10 text-xs font-mono-accent">
-              <div className="bg-white/5 p-3 rounded-2xl border border-white/5">
-                <span className="text-[#9A9AB0] text-[10px] block">TOTAL DURATION</span>
-                <span className="text-base font-bold text-white">03:48</span>
-              </div>
-              <div className="bg-white/5 p-3 rounded-2xl border border-white/5">
-                <span className="text-[#9A9AB0] text-[10px] block">SPEECH CADENCE</span>
-                <span className="text-base font-bold text-[#3DDC97]">142 WPM</span>
-              </div>
-              <div className="bg-white/5 p-3 rounded-2xl border border-white/5">
-                <span className="text-[#9A9AB0] text-[10px] block">HESITATIONS</span>
-                <span className="text-base font-bold text-[#FFB547]">3 flagged</span>
-              </div>
-              <div className="bg-white/5 p-3 rounded-2xl border border-white/5">
-                <span className="text-[#9A9AB0] text-[10px] block">JUDGE RATING</span>
-                <span className="text-base font-bold text-[#7C5CFF]">9.2 / 10</span>
-              </div>
-            </div>
+            <span className="font-mono text-xs text-ink-3 hidden sm:inline">
+              Total: {samplePitch.recordedTime}
+            </span>
           </div>
-        </div>
 
-        {/* Section 2: Rubric Radar + Per-Slide Timing Distribution */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Radar Chart (6 cols) */}
-          <div className="lg:col-span-6 p-7 rounded-3xl bg-[#0E0E16] border border-white/10 flex flex-col items-center justify-between shadow-xl">
-            <div className="w-full flex items-center justify-between mb-4">
-              <h3 className="text-base font-bold text-white font-heading">
-                5-Axis Hackathon Rubric
-              </h3>
-              <span className="text-xs font-mono-accent text-[#9A9AB0]">Standard MLH Radar</span>
-            </div>
-
-            <RadarChart axes={axes} size={320} showLabels={true} />
-
-            <div className="w-full mt-6 grid grid-cols-5 gap-1.5 text-center text-[10px] font-mono-accent">
-              {axes.map((a) => (
-                <div key={a.key} className="bg-white/5 p-2 rounded-xl">
-                  <div className="text-[#9A9AB0] truncate">{a.label.split(" ")[0]}</div>
-                  <div className="text-white font-bold mt-0.5">{a.score}</div>
+          <div className="border border-rule bg-paper divide-y divide-rule" style={{ borderRadius: "2px" }}>
+            {slidePacing.map((row) => (
+              <div key={row.slide} className="p-4 sm:p-5 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+                <div className="md:col-span-5 font-serif text-base font-medium text-ink">
+                  {row.slide}
                 </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Per-Slide Timing Bar Chart (6 cols) */}
-          <div className="lg:col-span-6 p-7 rounded-3xl bg-[#0E0E16] border border-white/10 flex flex-col justify-between shadow-xl">
-            <div className="w-full flex items-center justify-between mb-4">
-              <h3 className="text-base font-bold text-white font-heading flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#7C5CFF]" />
-                <span>Per-Slide Timing Allocation</span>
-              </h3>
-              <span className="text-xs font-mono-accent text-[#3DDC97]">Target vs Actual</span>
-            </div>
-
-            <div className="space-y-4 my-auto">
-              {mockSlides.map((s, i) => {
-                const isOver = s.actualTime > s.allocatedTime;
-                return (
-                  <div key={s.id} className="text-xs font-mono-accent">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[#F5F5FA] font-medium">
-                        Slide {i + 1}: {s.title.split(":")[0]}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[#9A9AB0]">Target: {s.allocatedTime}s</span>
-                        <span className={`font-bold ${isOver ? "text-[#FFB547]" : "text-[#3DDC97]"}`}>
-                          {s.actualTime}s
-                        </span>
-                      </div>
-                    </div>
-                    {/* Visual Comparison Bar */}
-                    <div className="h-3 w-full bg-white/10 rounded-full overflow-hidden flex">
-                      <div
-                        className="h-full bg-gradient-to-r from-[#7C5CFF] to-[#3DDC97] rounded-full"
-                        style={{ width: `${Math.min(100, (s.actualTime / 80) * 100)}%` }}
-                      />
-                    </div>
+                <div className="md:col-span-4 space-y-1">
+                  <div className="h-2 w-full bg-paper-2 border border-rule relative overflow-hidden" style={{ borderRadius: "2px" }}>
+                    <div
+                      className={`h-full ${row.alert ? "bg-danger" : "bg-signal"}`}
+                      style={{ width: `${Math.min(row.share * 100, 100)}%` }}
+                    />
                   </div>
-                );
-              })}
-            </div>
+                  <div className="flex justify-between font-mono text-[11px] text-ink-3">
+                    <span>Target: {row.target}</span>
+                    <span className="font-bold text-ink tabular-numbers">{row.time}</span>
+                  </div>
+                </div>
 
-            <div className="pt-4 border-t border-white/10 flex justify-between text-xs font-mono-accent text-[#9A9AB0]">
-              <span>Optimal Timing Variance: ±4%</span>
-              <span className="text-[#3DDC97]">Zero Critical Drift</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Section 3: Filler Words + Strengths / Improvements */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Filler Word List (5 cols) */}
-          <div className="lg:col-span-5 p-7 rounded-3xl bg-[#0E0E16] border border-white/10 flex flex-col justify-between shadow-xl">
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-bold text-white font-heading">
-                  Filler Word Telemetry
-                </h3>
-                <span className="text-xs font-mono-accent text-[#FF5C6C]">3 Occurrences</span>
-              </div>
-              <p className="text-xs text-[#9A9AB0] mb-5">
-                Timestamped occurrences caught during speech recognition:
-              </p>
-
-              <div className="space-y-3">
-                {mockFillerWords.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/5 text-xs font-mono-accent"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="text-[#FF5C6C] font-bold">"{item.word}"</span>
-                      <span className="text-[#9A9AB0]">({item.count}x)</span>
-                    </div>
-                    <span className="text-[11px] text-[#9A9AB0] bg-white/5 px-2 py-0.5 rounded">
-                      {item.timestamp}
+                <div className="md:col-span-3 text-right">
+                  {row.alert ? (
+                    <span className="font-mono text-xs text-danger font-semibold bg-danger/10 border border-danger/30 px-2 py-0.5" style={{ borderRadius: "2px" }}>
+                      {row.alert}
                     </span>
-                  </div>
-                ))}
+                  ) : (
+                    <span className="font-mono text-xs text-success font-semibold">
+                      Balanced pacing
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-white/10 text-xs text-[#3DDC97] font-mono-accent">
-              💡 Tip: Pause for 1 second instead of saying "basically".
-            </div>
-          </div>
-
-          {/* Strengths & Actionable Improvements (7 cols) */}
-          <div className="lg:col-span-7 p-7 rounded-3xl bg-[#0E0E16] border border-white/10 shadow-xl space-y-6">
-            <h3 className="text-base font-bold text-white font-heading">
-              Executive Judge Assessment
-            </h3>
-
-            {/* Strengths */}
-            <div>
-              <div className="flex items-center gap-2 text-xs font-mono-accent text-[#3DDC97] font-bold uppercase mb-2">
-                <CheckCircle2 className="w-4 h-4" />
-                <span>Confirmed Strengths</span>
-              </div>
-              <ul className="space-y-2 text-xs text-[#F5F5FA]">
-                {mockRubricScores.strengths.map((s, idx) => (
-                  <li key={idx} className="p-3 rounded-xl bg-[#3DDC97]/10 border border-[#3DDC97]/20 flex items-start gap-2.5">
-                    <span className="text-[#3DDC97] font-bold">✓</span>
-                    <span>{s}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Improvements */}
-            <div>
-              <div className="flex items-center gap-2 text-xs font-mono-accent text-[#FFB547] font-bold uppercase mb-2">
-                <AlertTriangle className="w-4 h-4" />
-                <span>Sunday Polish Checklist</span>
-              </div>
-              <ul className="space-y-2 text-xs text-[#F5F5FA]">
-                {mockRubricScores.improvements.map((imp, idx) => (
-                  <li key={idx} className="p-3 rounded-xl bg-[#FFB547]/10 border border-[#FFB547]/20 flex items-start gap-2.5">
-                    <span className="text-[#FFB547] font-bold">!</span>
-                    <span>{imp}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            ))}
           </div>
         </div>
       </div>

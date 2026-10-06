@@ -1,33 +1,39 @@
 "use client";
 
 import { siteConfig } from "@/data/content";
-import Badge from "@/components/ui/Badge";
-import Accordion from "@/components/ui/Accordion";
-import { HelpCircle } from "lucide-react";
 
 export default function FAQ() {
   return (
-    <section id="faq" className="relative py-28 sm:py-36 px-4 sm:px-6 md:px-8 bg-[#07070B] overflow-hidden border-t border-white/[0.06]">
-      {/* Background glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[550px] h-[550px] bg-[#7C5CFF]/10 rounded-full blur-[140px] pointer-events-none" />
+    <section
+      id="faq"
+      className="relative section-rhythm px-5 sm:px-8 lg:px-12 bg-paper border-b border-rule"
+    >
+      <div className="max-w-[1200px] mx-auto pb-16 sm:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          {/* Left Column (cols 1-4): Label + H2 */}
+          <div className="lg:col-span-4 lg:sticky lg:top-24">
+            <span className="text-xs uppercase font-mono tracking-[0.08em] text-ink-3 mb-3 font-semibold block">
+              QUESTIONS & PROTOCOLS
+            </span>
+            <h2 className="font-serif text-[clamp(2rem,3.8vw,3.25rem)] font-bold text-ink leading-[1.05]">
+              Frequently asked questions.
+            </h2>
+          </div>
 
-      <div className="max-w-4xl mx-auto">
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <Badge variant="violet" className="mb-4">
-            <HelpCircle className="w-3.5 h-3.5 text-[#7C5CFF]" />
-            <span>Got Questions?</span>
-          </Badge>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white font-heading">
-            Frequently asked questions
-          </h2>
-          <p className="mt-4 text-base text-[#9A9AB0]">
-            Everything you need to know about preparing your deck, acoustic privacy, and winning on Sunday.
-          </p>
+          {/* Right Column (cols 5-12): 5 Q&A pairs visible, separated by hairlines (NO accordion) */}
+          <div className="lg:col-span-8 divide-y divide-rule border-t lg:border-t-0 border-rule">
+            {siteConfig.faqs.map((faq) => (
+              <div key={faq.question} className="py-7 first:pt-0 last:pb-0 space-y-2">
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-ink">
+                  {faq.question}
+                </h3>
+                <p className="text-base text-ink-2 leading-relaxed font-sans max-w-xl">
+                  {faq.answer}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
-
-        {/* Accordion */}
-        <Accordion items={siteConfig.faq} />
       </div>
     </section>
   );

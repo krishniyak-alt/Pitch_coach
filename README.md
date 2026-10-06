@@ -1,4 +1,4 @@
-# PitchCoach 🎙️⚡
+# PitchCoach
 > **Award-Winning AI Hackathon Pitch Rehearsal Coach**  
 > *Rehearse like the judges are already watching.*
 
@@ -6,7 +6,7 @@ A production-quality web application built with **Next.js 14+ (App Router)**, **
 
 ---
 
-## 🚀 Quick Start & Installation
+## Quick Start & Installation
 
 ### Prerequisites
 - Node.js 18.x or 20+ (tested on Node v24)
@@ -31,11 +31,11 @@ npm run start
 
 ---
 
-## 🎨 How to Customize Brand Name, Colors, & Copy
+## How to Customize Brand Name, Colors, & Copy
 
 ### 1. Changing the Brand Name & Site Copy (Single Config File)
 All copy, brand names, slogans, judge personas, feature text, pricing tiers, FAQs, and testimonials are centralized in:
-👉 [`data/content.ts`](./data/content.ts)
+[`data/content.ts`](./data/content.ts)
 
 Simply edit the `siteConfig` object:
 ```ts
@@ -50,7 +50,7 @@ The entire landing page, navbar, loader, and footer will update automatically.
 
 ### 2. Changing Design Colors & Theme Tokens
 All color tokens and gradients are defined as CSS variables in:
-👉 [`app/globals.css`](./app/globals.css)
+[`app/globals.css`](./app/globals.css)
 
 ```css
 :root {
@@ -73,7 +73,7 @@ All color tokens and gradients are defined as CSS variables in:
 
 ---
 
-## 📂 Project Architecture
+## Project Architecture
 
 ```
 /
@@ -126,7 +126,7 @@ All color tokens and gradients are defined as CSS variables in:
 
 ---
 
-## 🛠️ Technology Stack & Libraries
+## Technology Stack & Libraries
 
 - **Framework**: Next.js 14+ (App Router) with React 19 & TypeScript
 - **Styling**: Tailwind CSS + Custom CSS Variables
@@ -141,7 +141,7 @@ All color tokens and gradients are defined as CSS variables in:
 
 ---
 
-## 📋 Assumptions Made
+## Assumptions Made
 
 1. **Client-Side Simulation**: Voice recording, slide OCR/parsing, and judge Q&A responses are simulated on the client with interactive states, timers, and animations, making the site runnable out of the box with zero external API keys or backends required.
 2. **Graceful WebGL Fallback**: If hardware acceleration or WebGL is disabled in the client's environment, the 3D Hero Orb automatically falls back to an animated CSS gradient mesh orb to ensure 60fps performance and zero layout shift.

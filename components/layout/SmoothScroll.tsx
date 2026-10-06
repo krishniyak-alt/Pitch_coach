@@ -9,25 +9,25 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
-    // Respect prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
+    // Lenis smoothing for wheel/trackpad only, keeping touch scrolling native on mobile
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // ease-out-expo
+      duration: 1.1,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 0.95,
-      touchMultiplier: 1.5,
+      touchMultiplier: 0,
+      syncTouch: false,
     });
 
     lenisRef.current = lenis;
 
-    // Sync Lenis scroll with GSAP ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);
 
     const updateTicker = (time: number) => {
@@ -36,6 +36,13 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
 
     gsap.ticker.add(updateTicker);
     gsap.ticker.lagSmoothing(0);
+
+    // Call ScrollTrigger.refresh() after fonts are loaded and after Lenis is initialized
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(() => {
+        ScrollTrigger.refresh();
+      });
+    }
 
     return () => {
       gsap.ticker.remove(updateTicker);

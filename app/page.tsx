@@ -1,59 +1,45 @@
+"use client";
+
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
-import Marquee from "@/components/sections/Marquee";
-import Problem from "@/components/sections/Problem";
-import HowItWorks from "@/components/sections/HowItWorks";
-import FeaturesBento from "@/components/sections/FeaturesBento";
-import InteractiveDemo from "@/components/sections/InteractiveDemo";
-import ScoringRubric from "@/components/sections/ScoringRubric";
-import JudgesShowcase from "@/components/sections/JudgesShowcase";
-import Testimonials from "@/components/sections/Testimonials";
-import Pricing from "@/components/sections/Pricing";
+import TheRun from "@/components/sections/TheRun";
+import TheJudge from "@/components/sections/TheJudge";
+import TheScoresheet from "@/components/sections/TheScoresheet";
+import WhatYouGet from "@/components/sections/WhatYouGet";
+import BuiltBy from "@/components/sections/BuiltBy";
 import FAQ from "@/components/sections/FAQ";
-import FinalCTA from "@/components/sections/FinalCTA";
+import Closing from "@/components/sections/Closing";
 
 export default function Home() {
   return (
-    <main className="relative bg-[#07070B] min-h-screen text-[#F5F5FA] overflow-x-hidden selection:bg-[#7C5CFF]/30">
-      {/* Sticky Glass Navbar */}
+    <main className="relative bg-paper text-ink min-h-screen">
+      {/* 5.1 Header */}
       <Navbar />
 
-      {/* Hero with 3D Orb and Parallax */}
+      {/* 5.2 Hero (Asymmetric split, ghost 3:00 parallax, hero scoresheet) */}
       <Hero />
 
-      {/* Infinite Hackathon Logo Marquee */}
-      <Marquee />
+      {/* 5.3 01 / THE RUN (Sticky timeline, 5 real UI frames) */}
+      <TheRun />
 
-      {/* The Problem Section */}
-      <Problem />
+      {/* 5.4 02 / THE JUDGE (Inverted ink section, transcript, difficulty toggle) */}
+      <TheJudge />
 
-      {/* How It Works: Pinned Scroll Storytelling */}
-      <HowItWorks />
+      {/* 5.5 03 / THE SCORESHEET (Hairline table with thin signal bars) */}
+      <TheScoresheet />
 
-      {/* Features Bento Grid with Micro-Animations */}
-      <FeaturesBento />
+      {/* 5.6 04 / WHAT YOU GET (Spec rows with hover shift) */}
+      <WhatYouGet />
 
-      {/* Interactive Live Demo */}
-      <InteractiveDemo />
+      {/* 5.7 05 / BUILT BY (Human section with team facts and TODO_REAL) */}
+      <BuiltBy />
 
-      {/* Scoring Rubric with SVG Radar Chart */}
-      <ScoringRubric />
-
-      {/* AI Judge Personas: Horizontal Scroll */}
-      <JudgesShowcase />
-
-      {/* Social Proof Testimonials */}
-      <Testimonials />
-
-      {/* Pricing Tiers */}
-      <Pricing />
-
-      {/* FAQ Accordion */}
+      {/* 5.8 FAQ (Visible Q&A pairs, no accordion) */}
       <FAQ />
 
-      {/* Final Stage Ready CTA */}
-      <FinalCTA />
+      {/* 5.9 Closing */}
+      <Closing />
 
       {/* Footer */}
       <Footer />
