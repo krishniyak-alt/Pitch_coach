@@ -29,6 +29,8 @@
     background-color: var(--paper);
     color: var(--ink);
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: clamp(64px, 8vw, 80px);
   }
 
   body {
@@ -37,7 +39,6 @@
     font-family: var(--font-instrument-sans), system-ui, -apple-system, sans-serif;
     font-size: 17px;
     line-height: 1.6;
-    overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -46,10 +47,16 @@
     color: var(--ink);
     font-family: var(--font-fraunces), Georgia, serif;
     text-wrap: balance;
+    overflow-wrap: anywhere;
   }
 
   p {
     text-wrap: pretty;
+  }
+
+  /* Responsive touch and tap ergonomics */
+  button, a, input, select, textarea, [role="button"] {
+    touch-action: manipulation;
   }
 
   ::selection {
@@ -96,31 +103,50 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Section spacing rhythm (Section 3) */
+/* Section spacing rhythm with clamp scaling (Section 3) */
 .section-rhythm {
-  padding-top: clamp(64px, 7vw, 96px);
+  padding-top: clamp(48px, 7vw, 96px);
   padding-bottom: 0;
   margin-top: 0;
   margin-bottom: 0;
 }
 
-/* Button & Link styles (Section 2.4) */
+/* Button & Link styles with >=44px tap targets */
 .btn-signal {
   background-color: var(--signal);
   color: var(--on-signal);
   border-radius: 2px;
   font-weight: 600;
-  padding: 14px 20px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 12px 20px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1), opacity 150ms ease;
   text-decoration: none;
   font-size: 15px;
 }
 
-.btn-signal:hover .arrow-nudge {
-  transform: translateX(4px);
+.btn-signal:active {
+  transform: scale(0.98);
+  opacity: 0.95;
+}
+
+/* Hover effects gated for pointer devices (Section 5 item 8) */
+@media (hover: hover) and (pointer: fine) {
+  .btn-signal:hover .arrow-nudge {
+    transform: translateX(4px);
+  }
+
+  .link-underline:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .hover-nudge-x:hover {
+    transform: translateX(4px);
+  }
 }
 
 .arrow-nudge {
@@ -132,9 +158,28 @@
   text-underline-offset: 4px;
   text-decoration-thickness: 1px;
   color: var(--ink);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   transition: text-decoration-thickness 150ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.link-underline:hover {
-  text-decoration-thickness: 2px;
+/* Landscape phone height safety (Section 4) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-landscape-auto {
+    min-height: auto !important;
+  }
+}
+
+/* Large and Ultrawide screens gentle scale (Section 7) */
+@media (min-width: 1920px) {
+  html {
+    font-size: 112.5%;
+  }
+}
+
+@media (min-width: 2560px) {
+  html {
+    font-size: 125%;
+  }
 }

@@ -40,7 +40,7 @@ export default function TheJudge() {
                   <button
                     key={level}
                     onClick={() => setDifficulty(level)}
-                    className={`px-4 py-1.5 text-xs font-mono uppercase tracking-wider font-semibold rounded-full transition-all duration-200 ${
+                    className={`min-h-[44px] inline-flex items-center justify-center px-3.5 sm:px-4 py-2 text-xs font-mono uppercase tracking-wider font-semibold rounded-full transition-all duration-200 ${
                       isActive
                         ? "bg-signal text-on-signal font-bold shadow-sm"
                         : "text-on-ink-muted hover:text-paper"
@@ -59,7 +59,7 @@ export default function TheJudge() {
           {/* Right Columns 7-12: The Transcript */}
           <div className="lg:col-span-7 flex flex-col">
             <div className="border border-paper/15 p-6 sm:p-8 bg-paper/[0.03]" style={{ borderRadius: "2px" }}>
-              <div className="flex items-center justify-between pb-4 border-b border-paper/15 mb-6 text-xs font-mono">
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-paper/15 mb-6 text-xs font-mono">
                 <span className="text-on-ink-muted uppercase tracking-wider">
                   SAMPLE Q&A TRANSCRIPT
                 </span>

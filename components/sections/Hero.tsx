@@ -17,7 +17,7 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-[min(100svh,860px)] flex flex-col justify-center pt-16 sm:pt-20 lg:pt-24 pb-12 px-5 sm:px-8 lg:px-12 bg-paper overflow-clip border-b border-rule"
+      className="relative min-h-[min(100svh,860px)] hero-landscape-auto flex flex-col justify-center pt-16 sm:pt-20 lg:pt-24 pb-12 px-5 sm:px-8 lg:px-12 bg-paper overflow-clip border-b border-rule"
     >
       {/* Huge ghost numeral 3:00 in Fraunces clipped by the hero (parallax layer) */}
       <motion.div
@@ -37,9 +37,9 @@ export default function Hero() {
           </span>
 
           {/* H1 with marker-style signal highlight behind "stop listening" */}
-          <h1 className="font-serif text-[clamp(2.75rem,6.2vw,5.5rem)] font-bold text-ink leading-[1.0] tracking-tight mb-5">
+          <h1 className="font-serif text-[clamp(2.15rem,6.2vw,5.5rem)] font-bold text-ink leading-[1.0] tracking-tight mb-5">
             Find out where the judges{" "}
-            <span className="relative inline-block whitespace-nowrap">
+            <span className="relative inline-block sm:whitespace-nowrap">
               {/* Highlight bar about 0.38em tall sitting behind the baseline */}
               <motion.span
                 className="absolute left-0 bottom-[0.1em] h-[0.38em] bg-signal -z-10"
@@ -64,7 +64,7 @@ export default function Hero() {
               <span className="arrow-nudge text-base">→</span>
             </Link>
 
-            <a href="#scoresheet" className="link-underline text-[15px] font-medium text-ink">
+            <a href="#scoresheet" className="link-underline text-[15px] font-medium text-ink min-h-[44px] inline-flex items-center">
               {siteConfig.hero.secondaryCta}
             </a>
           </div>

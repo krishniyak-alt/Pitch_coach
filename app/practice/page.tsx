@@ -60,13 +60,13 @@ export default function PracticePage() {
     <div className="bg-paper text-ink min-h-screen pt-20 pb-16 px-5 sm:px-8">
       <div className="max-w-[1100px] mx-auto space-y-8">
         {/* Top Studio Header */}
-        <header className="w-full flex items-center justify-between pb-4 border-b border-rule">
-          <Link href="/" className="font-serif text-2xl font-bold tracking-tight text-ink">
-            {siteConfig.name} <span className="font-mono text-xs uppercase text-ink-3">/ Rehearsal</span>
+        <header className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 pb-4 border-b border-rule">
+          <Link href="/" className="font-serif text-2xl font-bold tracking-tight text-ink min-h-[44px] inline-flex items-center">
+            {siteConfig.name} <span className="font-mono text-xs uppercase text-ink-3 ml-2">/ Rehearsal</span>
           </Link>
 
           {/* Step indicator */}
-          <div className="flex items-center gap-4 text-xs font-mono uppercase tracking-wider text-ink-3">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs font-mono uppercase tracking-wider text-ink-3">
             <span className={currentStep === 1 ? "text-ink font-bold border-b border-ink pb-0.5" : ""}>
               01 Upload
             </span>
@@ -96,11 +96,19 @@ export default function PracticePage() {
               </p>
             </div>
 
-            <div
+            <label
+              htmlFor="deck-upload-input"
               onClick={simulateUpload}
-              className="border-2 border-dashed border-rule hover:border-ink bg-paper-2 p-10 text-center cursor-pointer transition-colors space-y-3"
+              className="block border-2 border-dashed border-rule hover:border-ink bg-paper-2 p-8 sm:p-10 text-center cursor-pointer transition-colors space-y-3"
               style={{ borderRadius: "2px" }}
             >
+              <input
+                id="deck-upload-input"
+                type="file"
+                accept=".pdf,.pptx"
+                className="sr-only"
+                onChange={simulateUpload}
+              />
               <Upload className="w-8 h-8 text-ink-3 mx-auto" />
               <div className="font-serif text-lg font-bold text-ink">
                 {isUploading ? "Parsing deck..." : "Click to select or drop pitch deck"}
@@ -108,9 +116,9 @@ export default function PracticePage() {
               <div className="font-mono text-xs text-ink-3">
                 PDF or PPTX under 50MB
               </div>
-            </div>
+            </label>
 
-            <div className="flex items-center justify-between pt-2">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
               <span className="text-xs font-mono text-ink-3">
                 Or test with sample data:
               </span>
@@ -131,7 +139,7 @@ export default function PracticePage() {
             {/* Left Column: Slide preview in a hairline frame (cols 1-8) */}
             <div className="lg:col-span-8 space-y-4">
               <div
-                className="border border-rule bg-paper-2 p-6 sm:p-8 aspect-[16/10] flex flex-col justify-between"
+                className="border border-rule bg-paper-2 p-5 sm:p-8 min-h-[300px] sm:min-h-0 sm:aspect-[16/10] flex flex-col justify-between"
                 style={{ borderRadius: "2px" }}
               >
                 <div className="flex items-center justify-between border-b border-rule pb-3 text-xs font-mono">
@@ -166,7 +174,8 @@ export default function PracticePage() {
                     <button
                       onClick={() => setActiveSlide((prev) => Math.max(0, prev - 1))}
                       disabled={activeSlide === 0}
-                      className="px-2 py-1 border border-rule hover:bg-paper disabled:opacity-30"
+                      aria-label="Previous slide"
+                      className="min-h-[44px] min-w-[44px] px-2 py-1 border border-rule hover:bg-paper disabled:opacity-30 inline-flex items-center justify-center"
                       style={{ borderRadius: "2px" }}
                     >
                       <ChevronLeft className="w-4 h-4" />
@@ -174,7 +183,8 @@ export default function PracticePage() {
                     <button
                       onClick={() => setActiveSlide((prev) => Math.min(mockSlides.length - 1, prev + 1))}
                       disabled={activeSlide === mockSlides.length - 1}
-                      className="px-2 py-1 border border-rule hover:bg-paper disabled:opacity-30"
+                      aria-label="Next slide"
+                      className="min-h-[44px] min-w-[44px] px-2 py-1 border border-rule hover:bg-paper disabled:opacity-30 inline-flex items-center justify-center"
                       style={{ borderRadius: "2px" }}
                     >
                       <ChevronRight className="w-4 h-4" />
@@ -190,20 +200,25 @@ export default function PracticePage() {
                   <span>Slide Timeline</span>
                   <span className="font-bold text-ink">Slide {activeSlide + 1} active</span>
                 </div>
-                <div className="relative h-4 w-full flex items-center">
+                <div className="relative h-6 w-full flex items-center">
                   <div className="h-[1px] w-full bg-rule absolute" />
                   <div className="w-full flex justify-between relative z-10">
                     {mockSlides.map((_, i) => (
-                      <div
+                      <button
                         key={i}
                         onClick={() => setActiveSlide(i)}
-                        className={`w-3 h-3 cursor-pointer border ${
-                          activeSlide === i
-                            ? "bg-signal border-ink"
-                            : "bg-paper-2 border-rule hover:border-ink"
-                        }`}
-                        style={{ borderRadius: "2px" }}
-                      />
+                        aria-label={`Jump to slide ${i + 1}`}
+                        className="w-11 h-11 -my-2.5 flex items-center justify-center focus:outline-none"
+                      >
+                        <span
+                          className={`w-3 h-3 border ${
+                            activeSlide === i
+                              ? "bg-signal border-ink"
+                              : "bg-paper-2 border-rule hover:border-ink"
+                          }`}
+                          style={{ borderRadius: "2px" }}
+                        />
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -305,7 +320,7 @@ export default function PracticePage() {
 
                 <button
                   onClick={() => setIsAnswering(!isAnswering)}
-                  className={`w-full py-3 text-xs font-mono uppercase tracking-wider font-bold ${
+                  className={`w-full min-h-[44px] py-3 text-xs font-mono uppercase tracking-wider font-bold ${
                     isAnswering
                       ? "bg-danger text-paper"
                       : "border border-ink hover:bg-paper-2 text-ink"

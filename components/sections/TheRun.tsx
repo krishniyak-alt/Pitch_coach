@@ -149,13 +149,15 @@ export default function TheRun() {
               </div>
               {/* Slide markers along a rule */}
               <div className="space-y-1.5">
-                <div className="flex justify-between text-[11px] font-mono text-ink-3">
-                  <span>Slide 1 (Title)</span>
-                  <span>Slide 2 (Problem)</span>
-                  <span className="text-ink font-bold">Slide 3 (SMS Gateway)</span>
-                  <span>Slide 4</span>
-                  <span>Slide 5</span>
-                  <span>Slide 6</span>
+                <div className="overflow-x-auto no-scrollbar -mx-1 px-1">
+                  <div className="flex justify-between gap-2 min-w-[340px] sm:min-w-0 text-[11px] font-mono text-ink-3">
+                    <span>Slide 1 (Title)</span>
+                    <span>Slide 2 (Problem)</span>
+                    <span className="text-ink font-bold">Slide 3 (SMS Gateway)</span>
+                    <span>Slide 4</span>
+                    <span>Slide 5</span>
+                    <span>Slide 6</span>
+                  </div>
                 </div>
                 <div className="h-2 w-full bg-paper-2 border border-rule relative overflow-hidden" style={{ borderRadius: "2px" }}>
                   <div className="h-full bg-signal w-[38%]" />

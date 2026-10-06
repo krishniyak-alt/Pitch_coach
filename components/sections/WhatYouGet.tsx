@@ -25,7 +25,7 @@ export default function WhatYouGet() {
           {samplePitch.specRows.map((row) => (
             <div
               key={row.title}
-              className="py-6 sm:py-8 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-baseline group transition-transform duration-150 ease-out hover:translate-x-1"
+              className="py-6 sm:py-8 grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-baseline group transition-transform duration-150 ease-out hover-nudge-x"
             >
               {/* Left Column (cols 1-5): Name in Fraunces 28px */}
               <div className="md:col-span-5">

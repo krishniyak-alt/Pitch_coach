@@ -33,13 +33,13 @@ export default function ResultsPage() {
             </h1>
           </div>
 
-          <div className="flex items-center gap-4">
-            <Link href="/practice" className="btn-signal text-xs py-2 px-3.5 font-semibold">
+          <div className="flex flex-wrap items-center gap-4">
+            <Link href="/practice" className="btn-signal text-xs py-2 px-3.5 font-semibold min-h-[44px]">
               <span>Run Next Practice Round</span>
               <span className="arrow-nudge text-xs">→</span>
             </Link>
 
-            <Link href="/dashboard" className="link-underline text-xs font-mono uppercase tracking-wider text-ink">
+            <Link href="/dashboard" className="link-underline text-xs font-mono uppercase tracking-wider text-ink min-h-[44px] inline-flex items-center">
               View Run History
             </Link>
           </div>
@@ -47,7 +47,7 @@ export default function ResultsPage() {
 
         {/* Section 1: Full Scoresheet Table */}
         <div className="space-y-4">
-          <div className="flex items-baseline justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
             <span className="text-xs uppercase font-mono tracking-widest text-ink-3 font-semibold">
               OFFICIAL RUBRIC EVALUATION
             </span>

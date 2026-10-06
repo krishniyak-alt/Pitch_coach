@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Instrument_Sans, IBM_Plex_Mono, Caveat } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/layout/SmoothScroll";
@@ -32,6 +32,12 @@ const caveat = Caveat({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   title: `${siteConfig.name} - ${siteConfig.tagline}`,
   description: siteConfig.description,
@@ -59,7 +65,7 @@ export default function RootLayout({
       lang="en"
       className={`${fraunces.variable} ${instrumentSans.variable} ${ibmPlexMono.variable} ${caveat.variable} scroll-smooth`}
     >
-      <body className="bg-paper text-ink font-sans antialiased relative selection:bg-signal selection:text-on-signal">
+      <body className="bg-paper text-ink font-sans antialiased relative selection:bg-signal selection:text-on-signal min-h-[100svh]">
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

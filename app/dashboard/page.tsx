@@ -62,21 +62,27 @@ export default function DashboardPage() {
             </h1>
           </div>
 
-          <Link href="/practice" className="btn-signal text-xs py-2 px-3.5 font-semibold">
+          <Link href="/practice" className="btn-signal text-xs py-2 px-3.5 font-semibold min-h-[44px]">
             <span>Run New Practice Round</span>
             <span className="arrow-nudge text-xs">→</span>
           </Link>
         </header>
 
         {/* Progression Summary */}
-        <div className="flex items-baseline justify-between py-2 border-b border-rule font-mono text-xs text-ink-3">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 py-2 border-b border-rule font-mono text-xs text-ink-3">
           <span>PROGRESSION: 5.1 → 5.8 → 6.2 → 6.6</span>
           <span className="text-ink font-bold">+1.5 pts over 4 runs</span>
         </div>
 
+        {/* Mobile scroll hint */}
+        <div className="md:hidden text-xs font-mono text-ink-3 pb-1 flex items-center justify-end gap-1 select-none">
+          <span>Swipe horizontally to view run history</span>
+          <span className="text-signal">→</span>
+        </div>
+
         {/* Plain Table of Past Runs */}
-        <div className="border border-rule bg-paper overflow-x-auto" style={{ borderRadius: "2px" }}>
-          <table className="w-full text-left border-collapse">
+        <div className="border border-rule bg-paper overflow-x-auto overscroll-x-contain" style={{ borderRadius: "2px" }}>
+          <table className="w-full min-w-[640px] text-left border-collapse">
             <thead>
               <tr className="border-b border-rule bg-paper-2 text-[12px] font-mono uppercase tracking-widest text-ink-3">
                 <th className="py-3 px-4 font-semibold">Run</th>
@@ -116,7 +122,7 @@ export default function DashboardPage() {
                   <td className="py-4 px-4 text-right">
                     <Link
                       href="/results"
-                      className="link-underline text-xs font-mono uppercase tracking-wider text-ink font-semibold"
+                      className="link-underline text-xs font-mono uppercase tracking-wider text-ink font-semibold min-h-[44px] inline-flex items-center"
                     >
                       View Report →
                     </Link>
