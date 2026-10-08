@@ -1,11 +1,23 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { siteConfig } from "@/data/content";
 import { samplePitch } from "@/data/sample";
+import { fetchRehearsalHistory } from "@/lib/api-client";
+
+interface DashboardRun {
+  run: string;
+  date: string;
+  duration: string;
+  target: string;
+  score: string;
+  note: string;
+  status: string;
+}
 
 export default function DashboardPage() {
-  const pastRuns = [
+  const defaultRuns: DashboardRun[] = [
     {
       run: "Run 4",
       date: "Today, 14:20",
@@ -44,6 +56,31 @@ export default function DashboardPage() {
     },
   ];
 
+  const [pastRuns, setPastRuns] = useState<DashboardRun[]>(defaultRuns);
+
+  useEffect(() => {
+    async function loadHistory() {
+      // 1. Try loading from Django backend (MySQL)
+      const backendRuns = await fetchRehearsalHistory();
+      if (backendRuns && Array.isArray(backendRuns) && backendRuns.length > 0) {
+        setPastRuns(backendRuns);
+        return;
+      }
+
+      // 2. Fallback to localStorage
+      try {
+        const stored = localStorage.getItem("pitchcoach_run_history");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setPastRuns([...parsed, ...defaultRuns]);
+          }
+        }
+      } catch {}
+    }
+    loadHistory();
+  }, []);
+
   return (
     <div className="bg-paper text-ink min-h-screen pt-20 pb-16 px-5 sm:px-8">
       <div className="max-w-[1100px] mx-auto space-y-8">
@@ -58,7 +95,7 @@ export default function DashboardPage() {
               <span className="text-ink font-semibold">Run History</span>
             </div>
             <h1 className="font-serif text-3xl sm:text-4xl font-bold text-ink">
-              {samplePitch.name} Rehearsal History
+              Pitch Rehearsal History
             </h1>
           </div>
 
@@ -70,8 +107,8 @@ export default function DashboardPage() {
 
         {/* Progression Summary */}
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 py-2 border-b border-rule font-mono text-xs text-ink-3">
-          <span>PROGRESSION: 5.1 → 5.8 → 6.2 → 6.6</span>
-          <span className="text-ink font-bold">+1.5 pts over 4 runs</span>
+          <span>PROGRESSION AUDIT</span>
+          <span className="text-ink font-bold">{pastRuns.length} recorded practice runs</span>
         </div>
 
         {/* Mobile scroll hint */}
@@ -95,7 +132,7 @@ export default function DashboardPage() {
             </thead>
             <tbody className="divide-y divide-rule font-sans">
               {pastRuns.map((r, i) => (
-                <tr key={r.run} className="hover:bg-paper-2 transition-colors">
+                <tr key={`${r.run}-${i}`} className="hover:bg-paper-2 transition-colors">
                   <td className="py-4 px-4 font-serif font-bold text-lg text-ink">
                     {r.run}
                     {i === 0 && (
@@ -109,7 +146,7 @@ export default function DashboardPage() {
                   </td>
                   <td className="py-4 px-4 font-mono text-sm text-ink tabular-numbers">
                     <div>{r.duration} / {r.target}</div>
-                    <div className={`text-xs ${r.status.startsWith("Overtime") ? "text-danger" : "text-success"}`}>
+                    <div className={`text-xs ${r.status?.startsWith("Overtime") ? "text-danger" : "text-success"}`}>
                       {r.status}
                     </div>
                   </td>

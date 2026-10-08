@@ -2,29 +2,52 @@
 
 import { useEffect, useState, useRef } from "react";
 import { samplePitch, RubricCategory } from "@/data/sample";
+import { EvaluationResult } from "@/lib/types";
 import { motion, useInView } from "framer-motion";
 
 interface ScoresheetProps {
   variant?: "hero" | "full";
+  evaluation?: EvaluationResult | null;
 }
 
-export default function Scoresheet({ variant = "hero" }: ScoresheetProps) {
+export default function Scoresheet({ variant = "hero", evaluation }: ScoresheetProps) {
   const [displayTimer, setDisplayTimer] = useState("00:00");
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.2 });
+
+  // Use dynamic evaluation if passed, otherwise fall back to samplePitch
+  const rubricData = evaluation?.rubric || samplePitch.rubric;
+  const overallScoreText = evaluation?.overallScoreFormatted || samplePitch.overallScore;
+  const recordedDuration = evaluation
+    ? `${Math.floor(evaluation.totalDurationSec / 60)
+        .toString()
+        .padStart(2, "0")}:${(evaluation.totalDurationSec % 60)
+        .toString()
+        .padStart(2, "0")}`
+    : samplePitch.recordedTime;
+  const targetDuration = evaluation
+    ? `${Math.floor(evaluation.targetDurationSec / 60)
+        .toString()
+        .padStart(2, "0")}:${(evaluation.targetDurationSec % 60)
+        .toString()
+        .padStart(2, "0")}`
+    : samplePitch.timeLimit;
+  const deckTitle = evaluation ? evaluation.deckName : `${samplePitch.name}: ${samplePitch.tagline}`;
+  const runLabel = evaluation ? evaluation.status : samplePitch.runShort;
+  const marginNoteText = evaluation?.marginNote || samplePitch.marginNote;
 
   useEffect(() => {
     if (variant !== "hero") return;
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) {
-      setDisplayTimer(samplePitch.recordedTime);
+      setDisplayTimer(recordedDuration);
       return;
     }
 
-    // Timer counts 00:00 to 02:47 over 2.4s with ease-out
+    // Timer counts up with ease-out
     let startTime: number | null = null;
-    const targetSeconds = samplePitch.recordedTimeSec; // 167 seconds = 02:47
+    const targetSeconds = evaluation ? evaluation.totalDurationSec : samplePitch.recordedTimeSec;
     const duration = 2400;
 
     let animId: number;
@@ -33,7 +56,6 @@ export default function Scoresheet({ variant = "hero" }: ScoresheetProps) {
       if (!startTime) startTime = timestamp;
       const elapsed = timestamp - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      // easeOutQuad
       const easedProgress = 1 - (1 - progress) * (1 - progress);
       const currentSec = Math.floor(easedProgress * targetSeconds);
 
@@ -46,13 +68,13 @@ export default function Scoresheet({ variant = "hero" }: ScoresheetProps) {
       if (progress < 1) {
         animId = requestAnimationFrame(step);
       } else {
-        setDisplayTimer(samplePitch.recordedTime);
+        setDisplayTimer(recordedDuration);
       }
     };
 
     animId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(animId);
-  }, [variant]);
+  }, [variant, evaluation, recordedDuration]);
 
   if (variant === "hero") {
     return (
@@ -65,14 +87,14 @@ export default function Scoresheet({ variant = "hero" }: ScoresheetProps) {
         <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 pb-3.5 border-b border-rule text-xs font-mono tracking-wider">
           <div className="flex items-center gap-2 min-w-0">
             <span className="bg-ink text-paper px-1.5 py-0.5 text-[11px] font-semibold shrink-0">
-              SAMPLE PITCH
+              {evaluation ? "AI AUDIT" : "SAMPLE PITCH"}
             </span>
             <span className="text-ink font-semibold truncate text-[11px] sm:text-xs">
-              {samplePitch.name}: {samplePitch.tagline}
+              {deckTitle}
             </span>
           </div>
-          <span className="text-ink-3 font-semibold shrink-0 text-[11px] sm:text-xs">
-            {samplePitch.runShort}
+          <span className="text-ink-3 font-semibold shrink-0 text-[11px] sm:text-xs uppercase">
+            {runLabel}
           </span>
         </div>
 
@@ -85,7 +107,7 @@ export default function Scoresheet({ variant = "hero" }: ScoresheetProps) {
             <div className="text-2xl sm:text-4xl font-mono font-bold tracking-tight text-ink tabular-numbers">
               {displayTimer}{" "}
               <span className="text-ink-3 text-lg sm:text-xl font-normal font-mono">
-                / {samplePitch.timeLimit}
+                / {targetDuration}
               </span>
             </div>
           </div>
@@ -94,14 +116,14 @@ export default function Scoresheet({ variant = "hero" }: ScoresheetProps) {
               TOTAL COMPOSITE
             </span>
             <div className="text-2xl sm:text-4xl font-serif font-bold text-ink tabular-numbers">
-              {samplePitch.overallScore}
+              {overallScoreText}
             </div>
           </div>
         </div>
 
         {/* Five Rubric Rows with dotted leader line and tick draw-in */}
         <div className="space-y-3 pt-1">
-          {samplePitch.rubric.map((item, idx) => (
+          {rubricData.map((item, idx) => (
             <div key={item.category} className="relative flex items-center justify-between text-sm">
               {/* Category Name */}
               <div className="flex items-center gap-2 shrink-0">
@@ -143,7 +165,7 @@ export default function Scoresheet({ variant = "hero" }: ScoresheetProps) {
           ))}
         </div>
 
-        {/* Handwritten margin note in Caveat, rotated 2deg, in --danger with arrow pointing to Presentation */}
+        {/* Margin note */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 8 }}
@@ -166,18 +188,18 @@ export default function Scoresheet({ variant = "hero" }: ScoresheetProps) {
               />
             </svg>
             <span className="font-handwriting text-lg sm:text-2xl font-bold tracking-wide">
-              {samplePitch.marginNote}
+              {marginNoteText}
             </span>
           </div>
           <span className="text-[10px] uppercase font-mono tracking-widest text-ink-3">
-            SAMPLE REPORT
+            {evaluation?.aiProvider === "gemini" ? "AI VERIFIED" : "EVALUATION REPORT"}
           </span>
         </motion.div>
       </div>
     );
   }
 
-  // Full variant (Table format for Section 5.5 and Results page)
+  // Full variant (Table format for Results page)
   return (
     <div className="w-full">
       {/* Mobile scroll hint */}
@@ -199,12 +221,12 @@ export default function Scoresheet({ variant = "hero" }: ScoresheetProps) {
               <th className="py-3 px-4 sm:px-6 font-semibold hidden lg:table-cell">
                 What a judge looks for
               </th>
-              <th className="py-3 px-4 sm:px-6 font-semibold">Sample comment</th>
+              <th className="py-3 px-4 sm:px-6 font-semibold">Judge comment</th>
               <th className="py-3 px-4 sm:px-6 font-semibold text-right w-24 sm:w-28">Score</th>
             </tr>
           </thead>
           <tbody>
-            {samplePitch.rubric.map((item, idx) => (
+            {rubricData.map((item, idx) => (
               <tr
                 key={item.category}
                 className="border-b border-rule hover:bg-paper-2 transition-colors duration-150 group"
@@ -247,11 +269,11 @@ export default function Scoresheet({ variant = "hero" }: ScoresheetProps) {
                 Overall Score
               </td>
               <td className="py-5 sm:py-6 px-4 sm:px-6 hidden lg:table-cell font-mono text-xs uppercase tracking-wider text-ink-3">
-                Weighted composite (Sample Run 4)
+                {evaluation ? `Calculated from verbal transcript & pacing` : `Weighted composite (Sample Run 4)`}
               </td>
               <td className="py-5 sm:py-6 px-4 sm:px-6 lg:hidden" />
               <td className="py-5 sm:py-6 px-4 sm:px-6 text-right font-serif text-2xl sm:text-4xl font-bold text-ink tabular-numbers">
-                {samplePitch.overallScore}
+                {overallScoreText}
               </td>
             </tr>
           </tbody>

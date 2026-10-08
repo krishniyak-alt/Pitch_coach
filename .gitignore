@@ -32,6 +32,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+!backend/.env.example
 
 # vercel
 .vercel
@@ -39,3 +41,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+Pitch_couch/
+
+# Python & Django
+__pycache__/
+*.py[cod]
+*$py.class
+backend/db.sqlite3
+backend/.env
+backend/staticfiles/
+backend/__pycache__/
+backend/api/__pycache__/
+backend/pitch_backend/__pycache__/
